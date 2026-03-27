@@ -1,0 +1,43 @@
+import pandas as pd
+
+def department_highest_salary(employee: pd.DataFrame, department: pd.DataFrame) -> pd.DataFrame:
+    dept_dict = {}
+
+    for i in range(len(department)):
+        id = department["id"][i]
+        name = department["name"][i]
+
+        dept_dict[id] = name
+    
+    intr_dict = {}
+
+    for i in range(len(employee["id"])):
+
+        name = employee["name"][i]
+        salary = employee["salary"][i]
+        d_id = employee["departmentId"][i]
+
+        if(d_id not in intr_dict):
+            intr_dict[d_id] = []
+
+        intr_dict[d_id].append([salary, name])
+
+    
+    for key, vals in intr_dict.items():
+        intr_dict[key] = sorted(vals, reverse = True)
+
+    
+    data = []
+    for key, vals in intr_dict.items():
+
+        highest = vals[0][0]
+
+        i = 0
+        while(i < len(vals) and vals[i][0] == highest):
+            
+            data.append([dept_dict[key], vals[i][1], highest])
+            
+            i += 1
+        
+    
+    return pd.DataFrame(data, columns = ["Department", "Employee", "Salary"])
